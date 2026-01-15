@@ -93,6 +93,7 @@ export const api = {
   habits: {
     list: () => fetchFromSheet('getHabits'),
     add: (habit: Habit) => fetchFromSheet('addHabit', 'POST', { habit }),
+    update: (habit: Habit) => fetchFromSheet('updateHabit', 'POST', { habit }),
     delete: (habitId: string) => fetchFromSheet('deleteHabit', 'POST', { habitId }),
     log: (habitId: string, date: string) => fetchFromSheet('logCompletion', 'POST', { habitId, date }),
     unlog: (habitId: string, date: string) => fetchFromSheet('removeCompletion', 'POST', { habitId, date }),

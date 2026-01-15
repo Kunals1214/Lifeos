@@ -105,3 +105,9 @@ export interface Quote {
   text: string;
   author: string;
 }
+
+export interface Weather {
+  temp: number;
+  condition: string;
+  icon: string;
+}

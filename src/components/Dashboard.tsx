@@ -114,7 +114,7 @@ export default function Dashboard() {
   }
 
   const toggleTask = async (task: Task) => {
-    const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+    const newStatus: Task['status'] = task.status === 'completed' ? 'todo' : 'completed';
     const updatedTask = { ...task, status: newStatus };
     setTasks(tasks.map(t => t.id === task.id ? updatedTask : t));
     try {
@@ -129,9 +129,12 @@ export default function Dashboard() {
     const newTask: Task = {
       id: Date.now().toString(),
       title: newTaskTitle,
-      status: 'pending',
+      status: 'todo',
       priority: 'medium',
       category: 'Personal',
+      tags: [],
+      subtasks: [],
+      createdAt: new Date().toISOString(),
     };
     setTasks([newTask, ...tasks]);
     setNewTaskTitle('');
@@ -144,7 +147,7 @@ export default function Dashboard() {
   };
 
   const todayTasks = tasks.filter(t => t.status !== 'completed').slice(0, 5);
-  const completedToday = tasks.filter(t => (t.status === 'completed' || t.status === 'done')).length;
+  const completedToday = tasks.filter(t => t.status === 'completed').length;
   const totalTasks = tasks.length;
   const completionRate = totalTasks > 0 ? Math.round((completedToday / totalTasks) * 100) : 0;
 

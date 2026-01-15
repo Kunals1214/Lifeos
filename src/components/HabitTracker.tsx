@@ -18,6 +18,7 @@ import {
   Crown
 } from 'lucide-react';
 import { format, isSameDay, subDays } from 'date-fns';
+import { api } from '@/lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import AddHabitModal from './AddHabitModal';
@@ -44,6 +45,15 @@ export default function HabitTracker() {
       setHabits([]);
     }
     setLoading(false);
+  };
+
+  const handleUpdateHabit = async (updatedHabit: Habit) => {
+    try {
+      await api.habits.update(updatedHabit);
+      fetchHabits();
+    } catch (error) {
+      console.error('Failed to update habit:', error);
+    }
   };
 
   const calculateStreak = (habit: Habit) => {
@@ -291,7 +301,7 @@ export default function HabitTracker() {
           isOpen={!!editingHabit} 
           onClose={() => setEditingHabit(null)} 
           habit={editingHabit}
-          onUpdate={fetchHabits}
+          onSave={handleUpdateHabit}
         />
       )}
     </div>
