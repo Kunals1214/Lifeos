@@ -1,0 +1,35 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "scaffold-nextjs",
+			"type": "shell",
+			"command": "npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --use-npm --import-alias \"@/*\" --yes"
+		},
+		{
+			"label": "scaffold-nextjs-subdir",
+			"type": "shell",
+			"command": "npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir --use-npm --import-alias \"@/*\" --yes"
+		},
+		{
+			"label": "install-extra-deps",
+			"type": "shell",
+			"command": "npm install recharts canvas-confetti @types/canvas-confetti"
+		},
+		{
+			"label": "uninstall-google-libs",
+			"type": "shell",
+			"command": "npm uninstall googleapis google-auth-library"
+		},
+		{
+			"label": "remove-scripts-folder",
+			"type": "shell",
+			"command": "rm -rf scripts"
+		},
+		{
+			"label": "remove-old-lib-files",
+			"type": "shell",
+			"command": "rm src/lib/google.ts src/lib/data.ts"
+		}
+	]
+}
