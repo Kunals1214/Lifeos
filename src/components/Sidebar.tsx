@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '@/context/ThemeContext';
 import {
   LayoutDashboard,
   Wallet,
@@ -31,21 +32,22 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard, color: 'text-emerald-500' },
-  { name: 'Habits', href: '/habits', icon: Activity, color: 'text-emerald-500' },
-  { name: 'Tasks', href: '/tasks', icon: ListTodo, color: 'text-emerald-500' },
-  { name: 'Finance', href: '/finance', icon: Wallet, color: 'text-emerald-500' },
-  { name: 'Health', href: '/workout', icon: Dumbbell, color: 'text-cyan-500' },
-  { name: 'Study', href: '/study', icon: BookOpen, color: 'text-indigo-500' },
-  { name: 'Projects', href: '/projects', icon: FolderKanban, color: 'text-violet-500' },
-  { name: 'Contacts', href: '/contacts', icon: Users, color: 'text-zinc-400' },
-  { name: 'Progress', href: '/progress', icon: Trophy, color: 'text-amber-500' },
-  { name: 'AI Coach', href: '/coach', icon: Sparkles, color: 'text-fuchsia-500' },
-  { name: 'Settings', href: '/settings', icon: Settings, color: 'text-zinc-400' },
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Habits', href: '/habits', icon: Activity },
+  { name: 'Tasks', href: '/tasks', icon: ListTodo },
+  { name: 'Finance', href: '/finance', icon: Wallet },
+  { name: 'Health', href: '/workout', icon: Dumbbell },
+  { name: 'Study', href: '/study', icon: BookOpen },
+  { name: 'Projects', href: '/projects', icon: FolderKanban },
+  { name: 'Contacts', href: '/contacts', icon: Users },
+  { name: 'Progress', href: '/progress', icon: Trophy },
+  { name: 'AI Coach', href: '/coach', icon: Sparkles },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export default function Sidebar({ onLogout, collapsed, setCollapsed }: SidebarProps) {
   const pathname = usePathname();
+  const { theme } = useTheme();
   const [userName, setUserName] = useState('User');
 
   useEffect(() => {
@@ -60,6 +62,8 @@ export default function Sidebar({ onLogout, collapsed, setCollapsed }: SidebarPr
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'OP';
   };
 
+  const isLight = theme === 'light';
+
   return (
     <>
       <motion.aside
@@ -69,13 +73,15 @@ export default function Sidebar({ onLogout, collapsed, setCollapsed }: SidebarPr
           hidden lg:flex
           fixed z-50 h-full
           transition-all duration-300 ease-in-out
-          bg-white border-r border-zinc-200
-          dark:bg-zinc-950 dark:border-zinc-800
           flex-col
+          ${isLight 
+            ? 'bg-slate-700 text-white shadow-xl' 
+            : 'bg-[#16161f] border-r border-white/5 text-zinc-400'
+          }
         `}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between p-6 border-b border-zinc-200 dark:border-zinc-900">
+        <div className={`flex items-center justify-between p-6 ${isLight ? 'border-b border-white/10' : 'border-b border-white/5'}`}>
           <AnimatePresence mode="wait">
             {!collapsed && (
               <motion.div
@@ -84,13 +90,22 @@ export default function Sidebar({ onLogout, collapsed, setCollapsed }: SidebarPr
                 exit={{ opacity: 0, x: -10 }}
                 className="flex items-center gap-3"
               >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                  <Shield className="w-5 h-5 text-white" fill="white" fillOpacity={0.2} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-xl tracking-tight text-zinc-900 dark:text-white leading-none">LIFE<span className="text-emerald-600 dark:text-emerald-500">OS</span></span>
-                  <span className="text-[9px] text-zinc-500 uppercase tracking-widest font-mono">System Active</span>
-                </div>
+                {isLight ? (
+                  // Light Mode Logo (White/Clean)
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-sm">
+                      <Shield className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="font-bold text-xl tracking-tight text-white font-display">LifeOS</span>
+                  </div>
+                ) : (
+                  // Dark Mode Logo (Neon/Glow)
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-2xl tracking-tight text-white font-display leading-none">
+                      Life<span className="text-violet-500">OS</span>
+                    </span>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
@@ -98,49 +113,73 @@ export default function Sidebar({ onLogout, collapsed, setCollapsed }: SidebarPr
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setCollapsed(!collapsed)}
-            className="p-2 rounded-lg bg-zinc-100 text-zinc-500 hover:text-zinc-900 border border-zinc-200 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:text-white dark:border-zinc-800 transition-colors"
+            className={`
+              p-2 rounded-lg transition-colors
+              ${isLight 
+                ? 'bg-white/10 text-white hover:bg-white/20' 
+                : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
+              }
+            `}
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </motion.button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto no-scrollbar">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
+            
+            // Light Mode Active Style
+            const lightActiveClasses = "bg-white/10 text-white font-semibold shadow-sm";
+            const lightInactiveClasses = "text-slate-300 hover:bg-white/5 hover:text-white";
+            
+            // Dark Mode Active Style
+            const darkActiveClasses = "bg-gradient-to-r from-violet-500/20 to-purple-500/20 text-white border border-violet-500/30 shadow-neon";
+            const darkInactiveClasses = "text-zinc-500 hover:bg-white/5 hover:text-zinc-200";
+
             return (
               <Link
                 key={item.name}
                 href={item.href}
                 className={`
-                  relative flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group
-                  ${isActive
-                    ? 'bg-zinc-900 text-white border border-zinc-800 shadow-inner'
-                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
+                  relative flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 group
+                  ${isLight 
+                    ? (isActive ? lightActiveClasses : lightInactiveClasses)
+                    : (isActive ? darkActiveClasses : darkInactiveClasses)
                   }
                 `}
               >
                 <item.icon 
-                  size={18} 
-                  className={`transition-colors duration-300 ${isActive ? item.color : 'group-hover:text-zinc-300'}`} 
+                  size={20} 
+                  className={`
+                    transition-colors duration-200
+                    ${isLight
+                      ? (isActive ? 'text-white' : 'text-slate-400 group-hover:text-white')
+                      : (isActive ? 'text-violet-400' : 'text-zinc-600 group-hover:text-zinc-300')
+                    }
+                  `}
                 />
+                
                 <AnimatePresence mode="wait">
                   {!collapsed && (
                     <motion.span
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
-                      className="font-bold text-[10px] uppercase tracking-widest whitespace-nowrap font-mono"
+                      className={`
+                        text-sm font-medium whitespace-nowrap
+                        ${isLight ? 'font-display' : 'font-sans'}
+                      `}
                     >
                       {item.name}
                     </motion.span>
                   )}
                 </AnimatePresence>
-                {isActive && (
-                  <motion.div
-                    layoutId="sidebarActive"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-emerald-500 rounded-r-full"
-                  />
+
+                {/* Dark Mode Active Indicator Glow */}
+                {!isLight && isActive && (
+                  <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
                 )}
               </Link>
             );
@@ -148,32 +187,39 @@ export default function Sidebar({ onLogout, collapsed, setCollapsed }: SidebarPr
         </nav>
 
         {/* User Profile */}
-        <div className="p-4 border-t border-zinc-900 bg-zinc-950">
+        <div className={`p-4 ${isLight ? 'border-t border-white/10' : 'border-t border-white/5'}`}>
           <div className="flex items-center gap-3 px-2 py-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 font-bold shadow-sm text-xs font-mono">
+            <div className={`
+              w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-sm text-sm
+              ${isLight 
+                ? 'bg-slate-600 text-white border-2 border-slate-500' 
+                : 'bg-zinc-900 text-violet-400 border-2 border-violet-500/50 shadow-neon'
+              }
+            `}>
               {getInitials(userName)}
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-white truncate text-xs uppercase tracking-wider">{userName}</p>
-                <div className="flex items-center gap-1">
-                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                   <p className="text-[9px] text-zinc-500 font-mono uppercase tracking-widest">Operator</p>
-                </div>
+                <p className={`font-bold truncate text-sm ${isLight ? 'text-white' : 'text-white'}`}>
+                  {userName}
+                </p>
+                <p className={`text-xs ${isLight ? 'text-slate-400' : 'text-zinc-500'}`}>
+                  Pro Plan
+                </p>
               </div>
             )}
+            
+            {!collapsed && (
+               <button className={`p-1.5 rounded-lg transition-colors ${isLight ? 'hover:bg-white/10 text-slate-300' : 'hover:bg-white/5 text-zinc-500'}`}>
+                 <Settings size={18} />
+               </button>
+            )}
           </div>
-          {onLogout && (
-            <button
-              onClick={onLogout}
-              className={`
-                flex items-center gap-3 px-3 py-2 w-full rounded-xl text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300
-                ${collapsed ? 'justify-center' : ''}
-              `}
-            >
-              <LogOut size={16} />
-              {!collapsed && <span className="font-bold text-[10px] uppercase tracking-widest font-mono">Abort Session</span>}
-            </button>
+          
+          {onLogout && !collapsed && (
+             <button onClick={onLogout} className="w-full mt-2 py-2 text-xs text-center text-slate-400 hover:text-white transition-colors">
+               Sign Out
+             </button>
           )}
         </div>
       </motion.aside>

@@ -1,52 +1,225 @@
+/* Import Fonts - Must come before @tailwind directives */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Round');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 15, 15, 35;
-    --background-end-rgb: 15, 15, 35;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  /* background: linear-gradient(
-      135deg,
-      rgb(var(--background-start-rgb)) 0%,
-      rgb(var(--background-end-rgb)) 100%
-    ); */
-}
-
 @layer base {
+  :root {
+    /* Light Mode - Professional & Clean Design */
+    /* Backgrounds */
+    --background: 248 250 252;    /* slate-50 #F8FAFC */
+    --foreground: 30 41 59;       /* slate-800 #1e293b */
+    --card: 255 255 255;          /* white */
+    --card-foreground: 30 41 59;
+    --sidebar-bg: 51 65 85;       /* slate-700 #334155 */
+    
+    /* Primary Accent */
+    --primary: 99 102 241;        /* indigo-500 #6366f1 */
+    --primary-foreground: 255 255 255;
+    
+    /* Secondary Accent */
+    --secondary: 16 185 129;      /* green-500 #10b981 */
+    --secondary-foreground: 255 255 255;
+    
+    /* Additional Accents */
+    --accent: 241 245 249;        /* slate-100 */
+    --accent-foreground: 30 41 59;
+    --accent-orange: 249 115 22;  /* orange-500 */
+    --accent-blue: 59 130 246;    /* blue-500 */
+    --accent-purple: 139 92 246;  /* violet-500 */
+    --accent-pink: 236 72 153;    /* pink-500 */
+    
+    /* Text Colors */
+    --text-primary: 30 41 59;     /* slate-800 */
+    --text-secondary: 100 116 139; /* slate-500 */
+    --text-tertiary: 148 163 184;  /* slate-400 */
+    
+    /* Borders */
+    --border: 226 232 240;        /* slate-200 */
+    --input: 226 232 240;
+    --ring: 99 102 241;
+    
+    /* Status */
+    --muted: 241 245 249;         /* slate-100 */
+    --muted-foreground: 100 116 139;
+    --destructive: 239 68 68;     /* red-500 */
+    --destructive-foreground: 255 255 255;
+    --popover: 255 255 255;
+    --popover-foreground: 30 41 59;
+    
+    --radius: 1.5rem;
+  }
+ 
+  .dark {
+    /* Dark Mode - Futuristic & Immersive Design */
+    /* Backgrounds */
+    --background: 10 10 15;       /* deep space #0a0a0f */
+    --foreground: 255 255 255;
+    --card: 15 15 22;             /* #0f0f16 */
+    --card-foreground: 255 255 255;
+    --sidebar-bg: 22 22 31;       /* #16161f */
+    
+    /* Primary Accent (Violet/Purple theme) */
+    --primary: 139 92 246;        /* violet-500 #8b5cf6 */
+    --primary-foreground: 255 255 255;
+    
+    /* Secondary Accent */
+    --secondary: 16 185 129;      /* green-500 */
+    --secondary-foreground: 255 255 255;
+    
+    /* Additional Accents */
+    --accent: 39 39 42;           /* zinc-800 */
+    --accent-foreground: 255 255 255;
+    --accent-cyan: 6 182 212;     /* cyan-500 */
+    --accent-blue: 59 130 246;    /* blue-500 */
+    --accent-purple: 168 85 247;  /* purple-500 */
+    --accent-pink: 236 72 153;    /* pink-500 */
+    --accent-orange: 249 115 22;  /* orange-500 */
+    
+    /* Text Colors */
+    --text-primary: 255 255 255;
+    --text-secondary: 161 161 170; /* zinc-400 */
+    --text-tertiary: 113 113 122;  /* zinc-500 */
+    
+    /* Borders */
+    --border: 39 39 42;           /* zinc-800 - subtle */
+    --border-glow: 139 92 246;    /* violet-500 for glows */
+    --input: 39 39 42;
+    --ring: 139 92 246;
+    
+    /* Status */
+    --muted: 30 30 38;            /* #1e1e26 */
+    --muted-foreground: 161 161 170;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --popover: 15 15 22;
+    --popover-foreground: 255 255 255;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-[color:hsl(var(--border))];
+  }
+  
   body {
-    @apply bg-zinc-50 dark:bg-[#0a0a0f] text-zinc-900 dark:text-white transition-colors duration-300;
+    @apply bg-[color:hsl(var(--background))] text-[color:hsl(var(--foreground))];
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .dark body {
+    font-family: 'Inter', 'Space Grotesk', system-ui, -apple-system, sans-serif;
   }
 }
 
-/* Glassmorphism utility classes */
+/* Typography Classes */
+.font-display {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.dark .font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Glass Effect - Light Mode */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply bg-white/70 backdrop-blur-md border border-slate-200 shadow-sm;
 }
 
-.glass-dark {
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+/* Glass Effect - Dark Mode */
+.dark .glass {
+  @apply bg-white/[0.03] backdrop-blur-xl border border-white/10;
 }
 
-/* Custom scrollbar */
+/* Card Styles - Light Mode */
+.card-fresh {
+  @apply bg-white rounded-3xl p-6 shadow-sm border border-slate-100;
+  transition: all 0.2s ease;
+}
+
+.card-fresh:hover {
+  @apply shadow-md border-slate-200;
+}
+
+/* Card Styles - Dark Mode */
+.dark .card-fresh {
+  @apply bg-white/[0.03] backdrop-blur-xl rounded-3xl p-6 border border-white/10;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+}
+
+.dark .card-fresh:hover {
+  @apply bg-white/[0.05] border-white/20;
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.25);
+}
+
+/* Neon Glow Effects (Dark Mode Only) */
+.neon-glow {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.neon-glow-lg {
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
+}
+
+.neon-border {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Gradient Blur Orbs (Dark Mode Backgrounds) */
+.blur-orb-violet {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.blur-orb-cyan {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+/* Button Styles - Light Mode */
+.btn-primary {
+  @apply bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold shadow-md;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  @apply bg-indigo-600;
+}
+
+/* Button Styles - Dark Mode */
+.dark .btn-primary {
+  @apply bg-gradient-to-r from-violet-500 to-purple-500 text-white px-6 py-3 rounded-xl font-semibold;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.dark .btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar - Light Mode */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -57,22 +230,56 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.3);
-  border-radius: 3px;
+  @apply bg-slate-300 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.5);
+  @apply bg-slate-400;
 }
 
-/* Smooth animations */
-* {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+/* Custom Scrollbar - Dark Mode */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
 }
 
-/* Gradient text */
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+/* Category Badge Styles */
+.badge-mindset {
+  @apply text-xs px-2 py-0.5 rounded-md bg-purple-100 text-purple-600;
+}
+
+.dark .badge-mindset {
+  @apply bg-purple-900/30 text-purple-300;
+}
+
+.badge-health {
+  @apply text-xs px-2 py-0.5 rounded-md bg-pink-100 text-pink-600;
+}
+
+.dark .badge-health {
+  @apply bg-pink-900/30 text-pink-300;
+}
+
+.badge-study {
+  @apply text-xs px-2 py-0.5 rounded-md bg-blue-100 text-blue-600;
+}
+
+.dark .badge-study {
+  @apply bg-blue-900/30 text-blue-300;
+}
+
+.badge-career {
+  @apply text-xs px-2 py-0.5 rounded-md bg-green-100 text-green-600;
+}
+
+.dark .badge-career {
+  @apply bg-green-900/30 text-green-300;
+}
+
+/* Gradient Text */
 .gradient-text {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
   -webkit-background-clip: text;
@@ -80,7 +287,14 @@ body {
   background-clip: text;
 }
 
-/* Pulse animation for streaks */
+.dark .gradient-text {
+  background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Pulse Animation for Streaks */
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 5px rgba(249, 115, 22, 0.5);
@@ -94,7 +308,7 @@ body {
   animation: pulse-glow 2s infinite;
 }
 
-/* Time-based gradients */
+/* Time-based Gradients - Light Mode */
 .morning-gradient {
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
 }
@@ -105,4 +319,76 @@ body {
 
 .evening-gradient {
   background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+}
+
+/* Time-based Gradients - Dark Mode */
+.dark .morning-gradient {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.dark .afternoon-gradient {
+  background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%);
+}
+
+.dark .evening-gradient {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+}
+
+/* Hover Effects */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.dark .hover-glow:hover {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+/* Loading Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  @apply bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200;
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+.dark .skeleton {
+  @apply bg-gradient-to-r from-zinc-800 via-zinc-700 to-zinc-800;
+}
+
+/* Material Icons Round - Ensure proper sizing */
+.material-icons-round {
+  font-family: 'Material Icons Round';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+/* Utility: Backdrop Blur */
+.backdrop-blur-12 {
+  backdrop-filter: blur(12px);
+}
+
+/* Utility: Tracking adjustments for dark mode */
+.dark .tracking-display {
+  letter-spacing: -0.05em;
 }

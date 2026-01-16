@@ -6,7 +6,7 @@ import {
   CheckCircle2, Circle, Plus, Sparkles, Brain, Heart, TrendingUp,
   BookOpen, Dumbbell, DollarSign, Users, Target, Flame, Star,
   Sun, Moon, Zap, Award, ChevronRight, Play, Pause, RotateCcw, Crown, LayoutTemplate,
-  Calendar, Briefcase, Coffee
+  Calendar, Briefcase, Coffee, Activity, ChevronLeft, Quote
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Task, Habit } from '@/lib/types';
@@ -53,11 +53,14 @@ const USER_STATS = {
   stomach: "3'2\""
 };
 
+import { useTheme } from '@/context/ThemeContext';
+
 export default function Dashboard() {
-  const [isLightMode, setIsLightMode] = useState(false);
+  const { theme } = useTheme();
+  // State declarations
+  const [isLoading, setIsLoading] = useState(true);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [habits, setHabits] = useState<Habit[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentQuote, setCurrentQuote] = useState(WISDOM_QUOTES[0]);
   const [currentAffirmation, setCurrentAffirmation] = useState(BILLIONAIRE_AFFIRMATIONS[0]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -66,6 +69,8 @@ export default function Dashboard() {
   const [meditationTime, setMeditationTime] = useState(0);
   const [streak, setStreak] = useState(7);
 
+
+  // Remove local theme checking effect since we use context now
   useEffect(() => {
     loadData();
     // Rotate quotes every 30 seconds
@@ -74,19 +79,8 @@ export default function Dashboard() {
       setCurrentAffirmation(BILLIONAIRE_AFFIRMATIONS[Math.floor(Math.random() * BILLIONAIRE_AFFIRMATIONS.length)]);
     }, 30000);
 
-    const checkTheme = () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      setIsLightMode(!isDark);
-    };
-    checkTheme();
-    
-    // Observer for theme changes
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
     return () => {
       clearInterval(quoteInterval);
-      observer.disconnect();
     };
   }, []);
 
@@ -168,429 +162,462 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-[#0a0a0f]">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full"
+          className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full"
         />
       </div>
     );
   }
 
-  // --- LIGHT MODE LAYOUT ---
-  if (isLightMode) {
+  // --- LIGHT MODE LAYOUT (Professional & Clean) ---
+  if (theme === 'light') {
     return (
-      <div className="max-w-7xl mx-auto space-y-8 pb-32 pt-6 px-4">
-        {/* Modern Clean Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <greeting.icon className={`w-6 h-6 ${greeting.color}`} />
-              <span className="text-zinc-500 font-medium">{greeting.text}, Warrior</span>
+      <div className="space-y-8 animate-in fade-in duration-500 max-w-[1600px] mx-auto p-4 md:p-8">
+        {/* Header - Matches HTML Layout */}
+        <header className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-4 text-slate-400">
+            <button className="hover:text-slate-600 bg-white p-2 rounded-full shadow-sm transition-all border border-slate-100">
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div className="flex gap-6 font-medium text-sm">
+              <span className="text-slate-800 font-bold border-b-2 border-slate-800 pb-0.5">DASHBOARD</span>
+              <span className="hover:text-slate-600 cursor-pointer transition-colors">INSIGHTS</span>
+              <span className="hover:text-slate-600 cursor-pointer transition-colors">CHANNELS</span>
             </div>
-            <h1 className="text-4xl font-bold text-slate-800 tracking-tight">Daily Overview</h1>
           </div>
-          <div className="flex items-center gap-4 bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
-             <div className="px-4 py-2 bg-slate-50 rounded-lg">
-                <span className="text-xs text-slate-500 font-semibold uppercase">Focus Time</span>
-                <p className="font-bold text-slate-800">128m</p>
+          <div className="flex items-center gap-3">
+             <div className="flex -space-x-2">
+                <div className="w-8 h-8 rounded-full border-2 border-slate-50 bg-indigo-500 flex items-center justify-center text-white text-xs">JD</div>
+                <div className="w-8 h-8 rounded-full border-2 border-slate-50 bg-emerald-500 flex items-center justify-center text-white text-xs">AM</div>
              </div>
-             <div className="px-4 py-2 bg-slate-50 rounded-lg">
-                <span className="text-xs text-slate-500 font-semibold uppercase">Streak</span>
-                <p className="font-bold text-indigo-600">{streak} Days</p>
+             <span className="text-xs font-medium text-slate-500">Family Plan</span>
+          </div>
+        </header>
+
+        <div className="grid grid-cols-12 gap-6">
+          {/* Hero Stats Card - Blue Gradient */}
+          <div className="col-span-12 lg:col-span-8 bg-gradient-to-br from-[#457b9d] to-[#1d3557] rounded-3xl p-8 relative overflow-hidden shadow-lg text-white group min-h-[300px] flex flex-col justify-center transform hover:scale-[1.01] transition-all duration-500">
+             <div className="absolute top-0 right-0 w-full h-full opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+             <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+             
+             <div className="relative z-10 w-full lg:w-2/3">
+                <p className="text-blue-100 mb-1 font-medium font-display">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</p>
+                <h2 className="text-4xl lg:text-5xl font-bold mb-4 font-display">Keep it up, Operator!</h2>
+                
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="text-5xl font-light font-display">82<span className="text-2xl opacity-70">%</span></div>
+                  <div className="h-12 w-[1px] bg-white/20"></div>
+                  <div>
+                    <div className="flex text-yellow-300 mb-1">
+                      <Star size={16} fill="currentColor" />
+                      <Star size={16} fill="currentColor" />
+                      <Star size={16} fill="currentColor" />
+                      <Star size={16} fill="currentColor" />
+                      <Star size={16} className="text-white/30" fill="currentColor" />
+                    </div>
+                    <p className="text-sm text-blue-100 font-display">Daily Goal</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg backdrop-blur-sm border border-white/5">
+                    <TrendingUp size={16} />
+                    <span className="text-sm font-medium">Streak: {streak} days</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg backdrop-blur-sm border border-white/5">
+                    <CheckCircle2 size={16} />
+                    <span className="text-sm font-medium">{completedToday}/{totalTasks} Habits</span>
+                  </div>
+                </div>
              </div>
+
+             <button className="absolute bottom-0 right-0 bg-[#344b5a] hover:bg-[#2c3e4b] text-white px-8 py-4 rounded-tl-3xl rounded-br-3xl flex items-center gap-2 transition-all font-semibold shadow-lg">
+                VIEW FULL STATS
+                <ChevronRight size={16} />
+             </button>
+          </div>
+
+          {/* Consistency Card - Orange Theme */}
+          <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
+            <div className="bg-orange-100 rounded-3xl p-8 shadow-sm relative h-full flex flex-col justify-between border border-orange-200/50">
+               <div>
+                 <div className="flex justify-between items-start mb-2">
+                   <h3 className="font-bold text-slate-800 text-lg font-display">Consistency</h3>
+                   <span className="bg-white text-xs font-bold px-2 py-1 rounded-md text-slate-500 border border-slate-100">+2%</span>
+                 </div>
+                 <div className="flex items-end gap-2 mb-4">
+                   <span className="text-6xl font-light text-slate-800 font-display">87</span>
+                   <span className="text-2xl text-slate-400 mb-2 font-display">/100</span>
+                 </div>
+                 <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                    Your consistency score increased because of your morning routine activity. <strong className="text-slate-900">Keep moving</strong> forward!
+                 </p>
+               </div>
+               
+               <button 
+                onClick={() => setShowQuickAdd(true)}
+                className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:shadow-md transition-all group border border-slate-100"
+               >
+                 <div className="flex items-center gap-3">
+                   <div className="bg-orange-100 p-2 rounded-full text-orange-500">
+                     <Plus size={20} />
+                   </div>
+                   <div className="text-left">
+                     <p className="text-xs text-slate-500">Quick Action</p>
+                     <p className="font-bold text-slate-800 text-sm">Add New Habit</p>
+                   </div>
+                 </div>
+                 <div className="bg-orange-500 text-white rounded-full p-1 group-hover:scale-110 transition-transform">
+                   <ChevronRight size={16} />
+                 </div>
+               </button>
+
+               {/* Decorative Circular Graph */}
+               <div className="absolute top-8 right-8 w-24 h-24 opacity-80">
+                 <svg className="transform -rotate-90 w-full h-full" viewBox="0 0 36 36">
+                    <path className="text-orange-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3"></path>
+                    <path className="text-orange-500" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="87, 100" strokeLinecap="round" strokeWidth="3"></path>
+                 </svg>
+               </div>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content Column */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* AI Protocol Section - Prominent */}
-            <section className="bg-white rounded-2xl p-6 border border-slate-100 shadow-xl shadow-slate-200/50">
-               <div className="flex items-center gap-2 mb-6 border-b border-slate-100 pb-4">
-                 <Sparkles className="w-5 h-5 text-indigo-500" />
-                 <h2 className="text-xl font-bold text-slate-800">AI Daily Protocol</h2>
-               </div>
-               <DailyProtocol userStats={USER_STATS} />
-            </section>
-
-            {/* Tasks Section - Clean List */}
-            <section className="bg-white rounded-2xl p-6 border border-slate-100 shadow-xl shadow-slate-200/50">
-              <div className="flex justify-between items-center mb-6">
-                 <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                    <h2 className="text-xl font-bold text-slate-800">Your Missions</h2>
-                 </div>
-                 <button 
-                  onClick={() => setShowQuickAdd(!showQuickAdd)}
-                  className="p-2 hover:bg-slate-50 rounded-full transition-colors"
-                 >
-                   <Plus className="w-5 h-5 text-slate-500" />
-                 </button>
-              </div>
-
-              {showQuickAdd && (
-                <div className="mb-6 flex gap-2">
+        <div className="grid grid-cols-12 gap-6">
+           {/* Habits List */}
+           <div className="col-span-12 lg:col-span-8">
+             <div className="flex justify-between items-center mb-4">
+               <h3 className="font-bold text-slate-800 text-lg font-display">Today's Habits</h3>
+               <button className="text-slate-400 hover:text-emerald-500 transition-colors text-sm font-medium">View All</button>
+             </div>
+             
+             <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 min-h-[300px]">
+               {showQuickAdd && (
+                 <div className="mb-6 flex gap-3 animate-in fade-in slide-in-from-top-2">
                    <input 
                      type="text" 
                      value={newTaskTitle}
                      onChange={(e) => setNewTaskTitle(e.target.value)}
                      onKeyDown={(e) => e.key === 'Enter' && addQuickTask()}
-                     placeholder="Add a new mission..."
-                     className="flex-1 px-4 py-3 bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-slate-800 placeholder-slate-400"
+                     placeholder="New habit..."
+                     className="flex-1 px-4 py-3 bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                     autoFocus
                    />
-                   <button onClick={addQuickTask} className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors">Add</button>
-                </div>
-              )}
+                   <button onClick={addQuickTask} className="px-6 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-700 transition-colors">Add</button>
+                 </div>
+               )}
 
-              <div className="space-y-3">
-                {todayTasks.map((task) => (
-                  <div key={task.id} onClick={() => toggleTask(task)} className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group border border-transparent hover:border-slate-100">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${task.status === 'completed' ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 group-hover:border-indigo-400'}`}>
-                      {task.status === 'completed' && <CheckCircle2 className="w-4 h-4 text-white" />}
-                    </div>
-                    <span className={`text-lg transition-colors ${task.status === 'completed' ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{task.title}</span>
-                  </div>
-                ))}
-                {todayTasks.length === 0 && <p className="text-slate-400 text-center italic py-4">All captured tasks complete.</p>}
+               <div className="space-y-4">
+                 {todayTasks.length > 0 ? todayTasks.map((task) => (
+                   <div key={task.id} className="flex items-center group">
+                     <label className="relative flex items-center cursor-pointer p-4 rounded-2xl hover:bg-slate-50 w-full transition-all border border-transparent hover:border-slate-100 group-hover:shadow-sm">
+                       <input 
+                        type="checkbox" 
+                        checked={task.status === 'completed'}
+                        onChange={() => toggleTask(task)}
+                        className="w-6 h-6 rounded-lg text-emerald-500 border-slate-300 focus:ring-emerald-500"
+                       />
+                       <div className="ml-4 flex-1">
+                         <span className={`block text-sm font-bold transition-all ${task.status === 'completed' ? 'text-slate-400 line-through' : 'text-slate-800'}`}>
+                           {task.title}
+                         </span>
+                         <span className="block text-xs text-slate-400 mt-0.5 font-medium">
+                           {task.category || 'General'} • {task.priority}
+                         </span>
+                       </div>
+                       <div className={`p-2 rounded-full transition-colors ${task.status === 'completed' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                         <Activity size={18} />
+                       </div>
+                     </label>
+                   </div>
+                 )) : (
+                   <div className="text-center py-10 text-slate-400">
+                     <p>Time to schedule your day.</p>
+                   </div>
+                 )}
+               </div>
+             </div>
+           </div>
+
+           {/* Best Streaks */}
+           <div className="col-span-12 lg:col-span-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-slate-800 text-lg font-display">Best Streaks</h3>
+                <span className="bg-white px-3 py-1 rounded-full text-xs text-slate-500 font-bold border border-slate-100 shadow-sm">This Week</span>
               </div>
-            </section>
-          </div>
-
-          {/* Sidebar Column */}
-          <div className="space-y-8">
-             {/* Quote Card */}
-             <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-8 text-white shadow-lg shadow-indigo-500/20 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
-                <BookOpen className="w-8 h-8 text-indigo-100 mb-6" />
-                <p className="text-xl font-medium leading-relaxed mb-6 opacity-95">"{currentQuote.text}"</p>
-                <div className="flex items-center gap-2 text-indigo-100 text-sm font-bold uppercase tracking-wider">
-                  <span className="w-8 h-[1px] bg-indigo-200"></span>
-                  {currentQuote.source}
+              
+              <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 h-full flex flex-col justify-center min-h-[300px]">
+                <ul className="space-y-6">
+                   {[
+                     { name: 'Early Sleep', cat: 'Wellness', days: 24, color: 'bg-purple-100 text-purple-600', letters: 'ES' },
+                     { name: 'Coding Session', cat: 'Career', days: 18, color: 'bg-blue-100 text-blue-600', letters: 'CS' },
+                     { name: 'No Phone Bed', cat: 'Health', days: 12, color: 'bg-pink-100 text-pink-600', letters: 'NP' },
+                   ].map((item, i) => (
+                     <li key={i} className="flex items-center justify-between">
+                       <div className="flex items-center gap-4">
+                         <div className={`w-12 h-12 rounded-2xl ${item.color} flex items-center justify-center font-bold text-sm`}>
+                           {item.letters}
+                         </div>
+                         <div>
+                           <p className="font-bold text-slate-800 text-sm">{item.name}</p>
+                           <p className="text-xs text-slate-400 font-medium">{item.cat}</p>
+                         </div>
+                       </div>
+                       <div className="flex items-center gap-1.5 bg-orange-50 px-3 py-1.5 rounded-full">
+                         <Flame size={14} className="text-orange-500" />
+                         <span className="font-bold text-slate-700 text-xs">{item.days}</span>
+                       </div>
+                     </li>
+                   ))}
+                </ul>
+                
+                <div className="mt-8 pt-6 border-t border-slate-50">
+                   <button className="w-full py-3 text-center text-indigo-600 text-sm font-bold hover:bg-indigo-50 rounded-xl transition-colors">
+                     View All Achievements
+                   </button>
                 </div>
-             </div>
-
-             {/* Categories Grid */}
-             <div className="grid grid-cols-2 gap-4">
-                {LIFE_AREAS.map((area) => (
-                  <div key={area.id} className="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col items-center text-center gap-3">
-                     <div className={`w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-600`}>
-                        <area.icon className="w-5 h-5" />
-                     </div>
-                     <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">{area.name.split(' ')[0]}</span>
-                  </div>
-                ))}
-             </div>
-          </div>
+              </div>
+           </div>
         </div>
       </div>
     );
   }
 
+  // --- DARK MODE LAYOUT (Futuristic & Glass) ---
   return (
-    <div className="max-w-6xl mx-auto space-y-10 pb-32">
-      {/* Imperial Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <div className="space-y-12 animate-in fade-in duration-700 pb-20">
+      
+      {/* 1. Header Section - Minimal & High Tech */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative z-10">
         <div>
-          <h1 className="text-4xl font-black tracking-tighter text-zinc-900 dark:text-white flex items-center gap-3 uppercase">
-            IMPERIAL <span className="text-emerald-600 dark:text-emerald-500">COMMAND</span>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-2 font-sans bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/50">
+            DASHBOARD
           </h1>
-          <p className="text-zinc-500 text-lg mt-1 font-medium italic">"Build your empire, master your mind."</p>
+          <div className="flex items-center gap-3 text-emerald-400/80 font-mono text-sm tracking-[0.2em] uppercase">
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+            System Online
+            <span className="text-white/20">|</span>
+            v2.4.0
+          </div>
         </div>
+
+        {/* Quick Actions Deck */}
+        <div className="flex items-center gap-4 bg-white/5 backdrop-blur-md rounded-2xl p-2 border border-white/10 shadow-2xl">
+          <button 
+            onClick={() => setShowQuickAdd(true)}
+            className="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all border border-white/5 group"
+          >
+            <Plus className="w-5 h-5 text-emerald-400 group-hover:rotate-90 transition-transform" />
+            <span className="text-sm font-bold text-white tracking-wide">NEW PROTOCOL</span>
+          </button>
+          
+          <div className="w-[1px] h-8 bg-white/10"></div>
+          
+          <div className="flex gap-1">
+             <button className="p-3 hover:bg-white/10 rounded-xl transition-colors text-zinc-400 hover:text-white">
+                <LayoutTemplate className="w-5 h-5" />
+             </button>
+             <button className="p-3 hover:bg-white/10 rounded-xl transition-colors text-zinc-400 hover:text-white">
+                <Zap className="w-5 h-5" />
+             </button>
+          </div>
+        </div>
+      </header>
+
+      {/* 2. Main Grid Layout */}
+      <div className="grid grid-cols-12 gap-8">
         
-        <div className="flex items-center gap-4">
-          <div className="px-6 py-4 rounded-2xl bg-white border border-zinc-200 dark:bg-zinc-900/50 dark:border-zinc-800/50 backdrop-blur-xl shadow-sm dark:shadow-none">
-            <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest block mb-1">Current Status</span>
-            <div className="flex items-end gap-2">
-              <span className="text-3xl font-black text-zinc-900 dark:text-white">WARRIOR</span>
-              <Crown className="w-5 h-5 text-emerald-600 dark:text-emerald-500 mb-1" />
-            </div>
-          </div>
-        </div>
-      </div>
+        {/* Left Column: Stats & Matrix (8 Cols) */}
+        <div className="col-span-12 lg:col-span-8 space-y-8">
+          
+          {/* Hero Matrix Card */}
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-[#0a0a0f] border border-white/10 p-10 group">
+             {/* Dynamic Background */}
+             <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-[#0a0a0f] to-emerald-900/20 opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+             
+             {/* Grid Patern Overlay */}
+             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] pointer-events-none"></div>
 
-      {/* NEW AI PROTOCOL SECTION FOR IMPERIAL MODE */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative"
-      >
-        <DailyProtocol userStats={USER_STATS} />
-      </motion.div>
-
-      {/* Wisdom Quote Card */}
-      <motion.div
-        key={currentQuote.text}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="relative overflow-hidden rounded-[2rem] bg-white border border-zinc-200 dark:bg-zinc-900/50 dark:border-zinc-800/50 backdrop-blur-xl p-8 group hover:border-emerald-500/30 transition-all shadow-sm dark:shadow-none"
-      >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-full blur-[80px] -z-10" />
-        <Sparkles className="w-8 h-8 text-emerald-600 dark:text-emerald-500 mb-4" />
-        <blockquote className="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white mb-4 leading-relaxed uppercase tracking-tight">
-          &ldquo;{currentQuote.text}&rdquo;
-        </blockquote>
-        <cite className="text-emerald-600 dark:text-emerald-400 text-lg not-italic font-bold tracking-widest">— {currentQuote.source}</cite>
-      </motion.div>
-
-      {/* Quick Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: 'DISCIPLINE STREAK', value: `${streak} DAYS`, icon: Flame, color: 'text-orange-500' },
-          { label: 'MISSIONS CLEARED', value: `${completedToday}/${totalTasks}`, icon: CheckCircle2, color: 'text-emerald-500' },
-          { label: 'EMPIRE LEVEL', value: '42', icon: Award, color: 'text-purple-500' },
-          { label: 'FOCUS DURATION', value: '128m', icon: Zap, color: 'text-cyan-500' },
-        ].map((stat, i) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="p-6 rounded-3xl bg-white border border-zinc-200 dark:bg-zinc-900/50 dark:border-zinc-800/50 backdrop-blur-xl group hover:border-emerald-500/30 transition-all shadow-sm dark:shadow-none"
-          >
-            <div className={`p-3 rounded-2xl bg-zinc-100 dark:bg-zinc-800/50 w-fit mb-4 group-hover:scale-110 transition-transform ${stat.color}`}>
-              <stat.icon className="w-6 h-6" />
-            </div>
-            <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
-            <div className="flex items-end gap-1 mt-1">
-              <h3 className="text-2xl font-black text-zinc-900 dark:text-white">{stat.value}</h3>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Task Section */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-2 bg-white border border-zinc-200 dark:bg-zinc-900/50 dark:border-zinc-800/50 backdrop-blur-xl rounded-[2.5rem] p-8"
-        >
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-black text-zinc-900 dark:text-white flex items-center gap-3 uppercase tracking-tighter">
-              <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center">
-                <Zap className="w-5 h-5 text-yellow-600 dark:text-yellow-500" />
-              </div>
-              Daily Missions
-            </h2>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="p-3 rounded-xl bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 border border-zinc-200 dark:border-white/10 transition-colors"
-            >
-              <Plus className="w-6 h-6 text-zinc-600 dark:text-white" />
-            </motion.button>
-          </div>
-
-          <AnimatePresence>
-            {showQuickAdd && (
-              <motion.div
-                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
-                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                className="overflow-hidden"
-              >
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newTaskTitle}
-                    onChange={(e) => setNewTaskTitle(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && addQuickTask()}
-                    placeholder="Describe your next victory..."
-                    className="flex-1 bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-2xl px-6 py-4 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                  />
-                  <button
-                    onClick={addQuickTask}
-                    className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl text-white font-bold hover:brightness-110 transition-all"
-                  >
-                    Deploy
-                  </button>
+             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                <div>
+                   <h2 className="text-3xl font-light text-white mb-2">
+                      <span className="font-bold">Good {greeting.text.split(' ')[1]}</span>, Architect.
+                   </h2>
+                   <p className="text-zinc-400 text-lg max-w-md leading-relaxed">
+                      Your empire is currently operating at <span className="text-emerald-400 font-bold">{completionRate}% efficiency</span>.
+                      Focus levels are optimal.
+                   </p>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
-          <div className="space-y-4">
-            {todayTasks.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 className="w-10 h-10 text-emerald-600 dark:text-emerald-500" />
+                <div className="flex items-center gap-6">
+                   <div className="text-right">
+                      <div className="text-5xl font-bold text-white tracking-tighter tabular-nums">
+                         {formatTime(meditationTime)}
+                      </div>
+                      <div className="text-emerald-500/80 text-xs font-mono tracking-widest uppercase mt-1">
+                         Flow State Timer
+                      </div>
+                   </div>
+                   <button 
+                      onClick={() => setMeditationActive(!meditationActive)}
+                      className={`w-16 h-16 rounded-2xl flex items-center justify-center border transition-all ${meditationActive ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400 hover:scale-105'}`}
+                   >
+                      {meditationActive ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
+                   </button>
                 </div>
-                <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">All Clear!</h3>
-                <p className="text-zinc-500">You&apos;ve conquered all missions for now.</p>
-              </div>
-            ) : (
-              todayTasks.map((task, i) => (
-                <motion.div
-                  key={task.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => toggleTask(task)}
-                  className="group flex items-center gap-5 p-5 rounded-[1.5rem] bg-zinc-50 dark:bg-white/5 hover:bg-zinc-100 dark:hover:bg-white/[0.08] cursor-pointer transition-all border border-zinc-200 dark:border-white/[0.03] hover:border-purple-500/30 shadow-sm dark:shadow-none"
-                >
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                    task.status === 'completed'
-                      ? 'bg-emerald-500 border-emerald-500'
-                      : 'border-zinc-300 dark:border-zinc-700 group-hover:border-purple-400'
-                  }`}>
-                    {task.status === 'completed' && <CheckCircle2 className="w-5 h-5 text-white" />}
+             </div>
+
+             {/* Stats Row */}
+             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+                {[ 
+                  { label: "Day Streak", val: streak, icon: Flame, col: "text-orange-400", bg: "from-orange-500/10 to-transparent" },
+                  { label: "Missions", val: `${completedToday}/${totalTasks}`, icon: Target, col: "text-blue-400", bg: "from-blue-500/10 to-transparent" },
+                  { label: "Knowledge", val: "Lvl 42", icon: Brain, col: "text-purple-400", bg: "from-purple-500/10 to-transparent" },
+                  { label: "Net Worth", val: "+2.4%", icon: TrendingUp, col: "text-emerald-400", bg: "from-emerald-500/10 to-transparent" }
+                ].map((s, i) => (
+                  <div key={i} className={`bg-gradient-to-br ${s.bg} border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-colors`}>
+                     <div className={`p-2 rounded-lg bg-white/5 w-fit ${s.col} mb-3`}>
+                        <s.icon size={20} />
+                     </div>
+                     <div className="text-2xl font-bold text-white mb-1">{s.val}</div>
+                     <div className="text-xs text-zinc-500 uppercase tracking-wider font-bold">{s.label}</div>
                   </div>
-                  <span className={`flex-1 text-xl font-medium transition-all duration-300 ${
-                    task.status === 'completed' ? 'text-zinc-500 dark:text-zinc-600 line-through' : 'text-zinc-900 dark:text-zinc-200'
-                  }`}>
-                    {task.title}
-                  </span>
-                  <ChevronRight className="w-6 h-6 text-zinc-300 dark:text-zinc-700 group-hover:text-purple-400 transition-colors" />
-                </motion.div>
-              ))
-            )}
+                ))}
+             </div>
           </div>
+          
+          {/* Tasks Terminal */}
+          <div className="bg-[#0f0f13] rounded-[2.5rem] border border-white/5 p-8 flex-1 min-h-[400px]">
+             <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                   <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                   <h3 className="text-xl font-bold text-white tracking-wide">MISSION LOG</h3>
+                </div>
+                <div className="flex items-center gap-2 bg-white/5 rounded-lg p-1 border border-white/5">
+                   {['All', 'Priority', 'Done'].map(tab => (
+                      <button key={tab} className="px-4 py-1.5 rounded-md text-xs font-bold text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+                         {tab}
+                      </button>
+                   ))}
+                </div>
+             </div>
 
-          <div className="mt-10">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-zinc-400 font-medium uppercase tracking-wider text-xs">Campaign Progress</span>
-              <span className="text-emerald-400 font-bold">{completionRate}%</span>
-            </div>
-            <div className="h-4 bg-white/5 rounded-full overflow-hidden p-1 border border-white/5">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${completionRate}%` }}
-                className="h-full bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 rounded-full"
-              />
-            </div>
+             <div className="space-y-3">
+                <AnimatePresence>
+                {showQuickAdd && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden mb-4"
+                  >
+                     <div className="flex items-center gap-4 bg-white/5 border border-emerald-500/30 rounded-2xl p-2 pl-6">
+                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <input 
+                           autoFocus
+                           type="text" 
+                           placeholder="Enter mission directive..."
+                           className="bg-transparent border-none focus:ring-0 text-white placeholder-zinc-600 flex-1 h-12 text-sm font-mono"
+                           value={newTaskTitle}
+                           onChange={(e) => setNewTaskTitle(e.target.value)}
+                           onKeyDown={(e) => e.key === 'Enter' && addQuickTask()}
+                        />
+                        <button onClick={addQuickTask} className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-6 py-3 rounded-xl text-xs font-bold font-mono tracking-wider transition-colors border border-emerald-500/20">
+                           EXECUTE
+                        </button>
+                     </div>
+                  </motion.div>
+                )}
+                </AnimatePresence>
+
+                {todayTasks.length === 0 ? (
+                   <div className="h-64 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-3xl m-4">
+                      <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
+                         <CheckCircle2 className="text-zinc-600" size={24} />
+                      </div>
+                      <p className="text-zinc-500 font-mono text-sm">ALL SYSTEMS CLEAR</p>
+                   </div>
+                ) : (
+                  todayTasks.map((task, i) => (
+                    <motion.div
+                      key={task.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      onClick={() => toggleTask(task)}
+                      className="group flex items-center gap-6 p-5 rounded-2xl hover:bg-white/5 cursor-pointer border border-transparent hover:border-white/5 transition-all active:scale-[0.99]"
+                    >
+                      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                        task.status === 'completed' 
+                           ? 'bg-emerald-500 border-emerald-500' 
+                           : 'border-zinc-700 group-hover:border-emerald-500/50'
+                      }`}>
+                         {task.status === 'completed' && <CheckCircle2 size={14} className="text-[#0a0a0f]" strokeWidth={3} />}
+                      </div>
+                      
+                      <div className="flex-1">
+                         <h4 className={`text-base font-medium transition-colors ${
+                              task.status === 'completed' ? 'text-zinc-600 line-through' : 'text-zinc-200 group-hover:text-white'
+                           }`}>
+                            {task.title}
+                         </h4>
+                         <div className="flex items-center gap-3 mt-1">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-600 bg-white/5 px-2 py-0.5 rounded border border-white/5">
+                               {task.category || 'GENERAL'}
+                            </span>
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-600">
+                               PRIORITY: {task.priority}
+                            </span>
+                         </div>
+                      </div>
+
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                         <ChevronRight className="text-zinc-500" size={18} />
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+             </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Mindset & Meditation - Right Column */}
-        <div className="space-y-8">
-          {/* Meditation Tracker */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 backdrop-blur-xl rounded-[2rem] p-8 border border-white/5"
-          >
-            <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                <Brain className="w-6 h-6 text-purple-400" />
+        {/* Right Column: Life OS (4 Cols) */}
+        <div className="col-span-12 lg:col-span-4 space-y-6">
+           
+           {/* Life Areas Hex Grid */}
+           <div className="bg-[#0f0f13] rounded-[2.5rem] p-8 border border-white/5">
+              <h3 className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-6">Life Modules</h3>
+              <div className="grid grid-cols-2 gap-3">
+                 {LIFE_AREAS.map(area => (
+                    <div key={area.id} className="bg-white/[0.03] hover:bg-white/[0.06] p-4 rounded-2xl cursor-pointer group transition-colors border border-white/5">
+                       <area.icon className="w-8 h-8 text-zinc-600 group-hover:text-white transition-colors mb-4" />
+                       <div className="text-zinc-300 font-bold text-sm leading-tight group-hover:text-white">{area.name}</div>
+                       <div className="w-full bg-white/10 h-1 mt-3 rounded-full overflow-hidden">
+                          <div className={`h-full bg-gradient-to-r ${area.color} w-2/3`}></div>
+                       </div>
+                    </div>
+                 ))}
               </div>
-              Stillness
-            </h3>
-            
-            <div className="text-center mb-8">
-              <div className="text-6xl font-mono font-bold text-white mb-6 tracking-tighter">
-                {formatTime(meditationTime)}
-              </div>
-              <div className="flex justify-center gap-4">
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setMeditationActive(!meditationActive)}
-                  className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all ${
-                    meditationActive 
-                      ? 'bg-rose-500 text-white' 
-                      : 'bg-emerald-500 text-white'
-                  }`}
-                >
-                  {meditationActive ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => { setMeditationActive(false); setMeditationTime(0); }}
-                  className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-zinc-400 hover:bg-white/20"
-                >
-                  <RotateCcw className="w-7 h-7" />
-                </motion.button>
-              </div>
-            </div>
+           </div>
 
-            <p className="text-zinc-500 text-center text-sm italic">
-              &ldquo;The soul becomes dyed with the color of its thoughts.&rdquo;
-            </p>
-          </motion.div>
+           {/* Quote Card */}
+           <div className="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl -z-10"></div>
+              <Quote size={40} className="text-white/20 mb-4" />
+              <p className="text-xl font-medium text-white leading-relaxed mb-4 font-serif italic">
+                 "{currentQuote.text}"
+              </p>
+              <p className="text-sm text-purple-200 font-bold uppercase tracking-widest">
+                 — {currentQuote.source}
+              </p>
+           </div>
 
-          {/* Billionaire Affirmation */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 backdrop-blur-xl rounded-[2rem] p-8 border border-amber-500/20"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                <Star className="w-6 h-6 text-amber-500" />
-              </div>
-              <span className="text-amber-500 font-bold uppercase tracking-widest text-xs">Emperor Mindset</span>
-            </div>
-            <p className="text-2xl font-bold text-white leading-tight">
-              {currentAffirmation}
-            </p>
-          </motion.div>
         </div>
       </div>
-
-      {/* Life Areas Progress */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-[#111118]/50 backdrop-blur-xl rounded-[2rem] p-8 border border-white/5"
-      >
-        <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
-            <TrendingUp className="w-6 h-6 text-cyan-400" />
-          </div>
-          Empire Expansion
-        </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-6 gap-6">
-          {LIFE_AREAS.map((area, i) => (
-            <motion.div
-              key={area.id}
-              whileHover={{ y: -8 }}
-              className="relative p-6 rounded-3xl bg-white/[0.02] border border-white/[0.05] hover:border-white/20 transition-all cursor-pointer group"
-            >
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${area.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
-                <area.icon className="w-7 h-7 text-white" />
-              </div>
-              <p className="text-white font-bold text-sm mb-1">{area.name}</p>
-              <div className="mt-4 h-2 bg-white/5 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.floor(Math.random() * 30 + 65)}%` }}
-                  className={`h-full bg-gradient-to-r ${area.color} rounded-full`}
-                />
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* English Mastery Tip */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-blue-900/30 to-cyan-900/30 backdrop-blur-xl rounded-[2rem] p-8 border border-blue-500/20"
-      >
-        <div className="flex flex-col md:flex-row gap-8 items-center">
-          <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 shadow-2xl">
-            <BookOpen className="w-12 h-12 text-white" />
-          </div>
-          <div className="text-center md:text-left">
-            <h3 className="text-blue-400 font-bold uppercase tracking-widest text-sm mb-2">Lexicon Growth</h3>
-            <div className="flex flex-col md:flex-row items-baseline gap-4 mb-3 justify-center md:justify-start">
-              <p className="text-4xl font-bold text-white tracking-tight">Perseverance</p>
-              <span className="text-blue-300 font-mono">/ˌpɜːsɪˈvɪərəns/</span>
-            </div>
-            <p className="text-zinc-300 text-xl leading-relaxed max-w-2xl">
-              Persistence in doing something despite difficulty or delay in achieving success.
-            </p>
-            <p className="text-zinc-500 mt-4 italic text-lg opacity-80">
-              &ldquo;The masterpiece of world is built upon the foundation of relentless perseverance.&rdquo;
-            </p>
-          </div>
-        </div>
-      </motion.div>
     </div>
   );
 }

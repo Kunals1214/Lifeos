@@ -31,12 +31,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
-      <body className={`font-sans bg-[#0a0a0f] text-white`}>
+      <body className={`font-sans antialiased min-h-screen`}>
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

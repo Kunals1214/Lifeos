@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LifeOS Habit Tracker</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: "#8b5cf6", // Violet-500
+                        secondary: "#10b981", // Emerald-500
+                        "background-light": "#f3f4f6",
+                        "background-dark": "#0a0a0f", // Deep space dark
+                        "card-light": "#ffffff",
+                        "card-dark": "rgba(255, 255, 255, 0.03)",
+                        "stroke-light": "#e5e7eb",
+                        "stroke-dark": "rgba(255, 255, 255, 0.08)",
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(139, 92, 246, 0.3)',
+                        'neon-green': '0 0 15px rgba(16, 185, 129, 0.3)',
+                    }
+                },
+            },
+        };
+    </script>
+<style>::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        .glass {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 font-body transition-colors duration-300 min-h-screen overflow-hidden flex">
+<aside class="w-20 lg:w-64 flex-shrink-0 flex flex-col justify-between border-r border-stroke-light dark:border-stroke-dark bg-white dark:bg-[#0f0f16] transition-all duration-300 z-20">
+<div>
+<div class="h-24 flex items-center justify-center lg:justify-start lg:px-8">
+<div class="relative flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white shadow-neon">
+<span class="material-icons-round text-xl">auto_awesome_mosaic</span>
+</div>
+<span class="font-display font-bold text-2xl hidden lg:block tracking-wide">LifeOS</span>
+</div>
+</div>
+<nav class="mt-8 px-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 bg-primary/10 text-primary dark:text-violet-300 rounded-2xl transition-all group relative overflow-hidden" href="#">
+<div class="absolute inset-0 bg-primary opacity-0 group-hover:opacity-10 transition-opacity"></div>
+<span class="material-icons-round">dashboard</span>
+<span class="hidden lg:block font-medium">Dashboard</span>
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-l-full"></div>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-2xl transition-all" href="#">
+<span class="material-icons-round">check_circle</span>
+<span class="hidden lg:block font-medium">Habits</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-2xl transition-all" href="#">
+<span class="material-icons-round">task_alt</span>
+<span class="hidden lg:block font-medium">Tasks</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-2xl transition-all" href="#">
+<span class="material-icons-round">account_balance_wallet</span>
+<span class="hidden lg:block font-medium">Finance</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-2xl transition-all" href="#">
+<span class="material-icons-round">fitness_center</span>
+<span class="hidden lg:block font-medium">Workout</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-2xl transition-all" href="#">
+<span class="material-icons-round">school</span>
+<span class="hidden lg:block font-medium">Study</span>
+</a>
+</nav>
+</div>
+<div class="p-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 rounded-2xl transition-all" href="#">
+<span class="material-icons-round">settings</span>
+<span class="hidden lg:block font-medium">Settings</span>
+</a>
+<div class="flex items-center gap-3 px-4 py-3 mt-4 border-t border-stroke-light dark:border-stroke-dark pt-6">
+<img alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDnqLJ5F6KrbwhQyXLijcxHLVYDu8EirXY9-hXDL4vnnav8_mi0WAX0eAHJs21H16-sPzfTyRqfLtCw1awAkk2sjdXkIsZrA9lsfOqrBM1Ouz6ul7-R3qQteS7OyXrg07AJSrxRYTWdHAf9r1uj--sQwnQuxK-eOUD8POs1iWOCDX3hrKm3JmLLgKQMAHhj-S2D4EilGC5n1q77MIXu8yQRzoMB91dT0wfxi6G5HiyuGrZIj1UYDq5F7zas1n4mzDVgd6ODuyrNVCu"/>
+<div class="hidden lg:block">
+<p class="text-sm font-bold text-gray-900 dark:text-white">Alex Morgan</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Pro Member</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 h-screen overflow-y-auto relative">
+<div class="hidden dark:block absolute top-[-20%] left-[10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="hidden dark:block absolute bottom-[-10%] right-[5%] w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<header class="sticky top-0 z-10 glass bg-white/70 dark:bg-[#0a0a0f]/70 px-8 py-5 flex justify-between items-center border-b border-stroke-light dark:border-stroke-dark">
+<div class="flex items-center gap-4">
+<button class="lg:hidden text-gray-500 dark:text-gray-300">
+<span class="material-icons-round">menu</span>
+</button>
+<h1 class="font-display font-bold text-xl uppercase tracking-widest text-gray-900 dark:text-white">Dashboard</h1>
+<nav class="hidden md:flex gap-6 ml-10 text-sm font-medium text-gray-400 dark:text-gray-500">
+<a class="text-primary dark:text-white border-b-2 border-primary pb-1" href="#">Overview</a>
+<a class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors" href="#">Insights</a>
+<a class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors" href="#">Channels</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center gap-2 bg-gray-100 dark:bg-white/5 px-3 py-1.5 rounded-full border border-stroke-light dark:border-white/10">
+<span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-300">12 members online</span>
+</div>
+<div class="flex -space-x-2">
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white dark:border-[#0a0a0f]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCR2R4v-_gjNMzL0PFJM1Du1wmjsbi2MSzMGwysiUiv4f3abQfnDath16UjpTPWtWkk-bmKpr34LQ54LlDziDLd43KoYFkUrv1iZQAhPRyd9iR58yB5F2BLIOezuj5-YqgRnAIgGKnaApyzD2-xdn_ndXx4rjfW2aBr1EKVBuvFiyERgWOqyVyqI7StPer1Vr0NZT3OHZ8vOy0CaS5qEt6mewVopq17FeHo3BBbqRY5Ze6soI6Yk9jnhfwHm1EsD3fel5HkpONF48Pr"/>
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white dark:border-[#0a0a0f]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9w7nxqmmulFdCrMDRafvLb7obpndHXezfa0hxoLZjjZ8FLUMw_piCSF6HYKa6mlGUSGkhrGBzPWwvOSQAMD8gz_lqq5N09BOfRUcnmN6nuIJC_t4w6_XUgn5kCJv7qlV8_-GbgGjHj8rI2MBZW4HFY-oFok1jbJYyi9TXK57PFGeBJd0Tfq47VEueYBP4Pq3TNk6y6wrwZCebq0CnBoYUmFfJwgnlOwJU6iUWRz3Nh-K_eS_mOs909kCUnm3rwIP65dOm0MQzrZPV"/>
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white dark:border-[#0a0a0f]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz6QMYaKNNO8hP0XHUhaKe5pu04oS9ZNYZbpWDeZeea_27A_JIzOzJFsQLC_U-oJoOYYeDy9hHPnUobNzoHNgtmoU_d0_mw41svaPS_o3_0vtwA9oXRSFjYe88P7YSru96wOMDsLkLBLO0lz8znL5Y_ujGRlucnQFRCR2XC6P67OCOB_znQWTF4QrmsFEOhPngoywaNoJuAT6ZU0nRGCwpXYB2GRrFaoEGbZ2hiolKvNiJPRYektfyNnyWhgsXSl4PxBg8UzetFK7a"/>
+</div>
+</div>
+</header>
+<div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-8 bg-card-light dark:bg-card-dark border border-stroke-light dark:border-stroke-dark rounded-3xl p-8 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-primary/10 dark:from-blue-900/20 dark:to-primary/20"></div>
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-center h-full">
+<div class="space-y-6 text-center md:text-left">
+<div>
+<h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Current Streak</h3>
+<div class="font-display font-bold text-7xl text-gray-900 dark:text-white tracking-tighter">
+                                    24<span class="text-4xl text-primary align-top">Days</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3 bg-white/50 dark:bg-white/5 px-4 py-2 rounded-xl backdrop-blur-sm w-max mx-auto md:mx-0">
+<span class="material-icons-round text-secondary text-sm">trending_up</span>
+<div>
+<p class="text-xs text-gray-500 dark:text-gray-400">Focus Score</p>
+<p class="font-bold text-gray-900 dark:text-white">93/100</p>
+</div>
+</div>
+<div class="flex items-center gap-3 bg-white/50 dark:bg-white/5 px-4 py-2 rounded-xl backdrop-blur-sm w-max mx-auto md:mx-0">
+<span class="material-icons-round text-blue-400 text-sm">show_chart</span>
+<div>
+<p class="text-xs text-gray-500 dark:text-gray-400">Consistency</p>
+<p class="font-bold text-gray-900 dark:text-white">4.7/5.0</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 md:mt-0 relative w-64 h-64">
+<div class="absolute inset-0 bg-gradient-to-tr from-primary to-secondary opacity-20 rounded-full blur-3xl"></div>
+<img alt="Productivity Illustration" class="relative z-10 w-full h-full object-contain mix-blend-normal dark:mix-blend-luminosity hover:mix-blend-normal transition-all duration-500 transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVdjEweLeMlzzAuDdtmYZoBy8ntqk5YSVSLro5EXuKrjy1XoBYP_PkJ7v_7pC8G5v9aq-en015LDjhLA6GyPMee9e1-1jTVvSgUAmUojWNNHQs1jpj1Al8HqR2wRzAqFenrhokrv4dBOxgH667dcqW6rlaA5ItzKtnCGF9K-059_wmD9ipmT5z9uyOp6swOcviBOQBmDYriIWPE2ix7C61Bmf5Pjut0wL4JRW4xJO5DqAj0M0bWNgbCCRffVU_oS26cVtX0hz5Bed4"/>
+</div>
+</div>
+<button class="absolute bottom-0 right-0 bg-gradient-to-r from-[#1e3a8a] to-[#1e40af] dark:from-[#0f4c75] dark:to-[#3282b8] text-white px-8 py-4 rounded-tl-3xl font-medium text-sm flex items-center gap-2 hover:brightness-110 transition-all shadow-lg">
+                        VIEW INSIGHTS <span class="material-icons-round text-sm">arrow_forward_ios</span>
+</button>
+</div>
+<div class="lg:col-span-4 bg-[#fff1e8] dark:bg-[#1a1512] border border-orange-100 dark:border-orange-900/30 rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-bl-full"></div>
+<div class="flex justify-between items-start z-10">
+<div>
+<h3 class="text-orange-900/60 dark:text-orange-200/60 font-medium mb-1">Discipline</h3>
+<div class="font-display font-bold text-6xl text-orange-900 dark:text-orange-50">
+                                87<span class="text-2xl align-top text-orange-400">%</span>
+</div>
+</div>
+<div class="relative w-20 h-20">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-orange-200 dark:text-orange-900/40" cx="40" cy="40" fill="transparent" r="36" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-orange-500" cx="40" cy="40" fill="transparent" r="36" stroke="currentColor" stroke-dasharray="226" stroke-dashoffset="30" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 material-icons-round text-orange-500">bolt</span>
+</div>
+</div>
+<p class="text-sm text-orange-800/70 dark:text-orange-200/50 mt-4 leading-relaxed">
+                        Your discipline has increased because of your recent update activity. <strong class="text-orange-900 dark:text-orange-100">Keep moving</strong> forward!
+                    </p>
+<div class="bg-white dark:bg-white/10 mt-6 p-4 rounded-2xl flex items-center justify-between shadow-sm border border-orange-100 dark:border-white/5">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-orange-100 dark:bg-orange-500/20 rounded-lg text-orange-600 dark:text-orange-400">
+<span class="material-icons-round text-lg">psychology</span>
+</div>
+<span class="text-xs font-semibold text-orange-900 dark:text-orange-100 w-24 leading-tight">Learn how to manage focus</span>
+</div>
+<button class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
+<span class="material-icons-round text-sm">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-4 bg-card-light dark:bg-card-dark border border-stroke-light dark:border-stroke-dark rounded-3xl p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-bold text-lg dark:text-white">Consistency Map</h3>
+<button class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+<span class="material-icons-round text-gray-400">calendar_month</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex items-end gap-3 mb-4">
+<div class="p-3 bg-secondary/10 rounded-xl">
+<span class="material-icons-round text-secondary text-2xl">grid_on</span>
+</div>
+<div>
+<h4 class="text-2xl font-bold dark:text-white">12,841</h4>
+<p class="text-xs text-gray-400">Contribution points</p>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-1.5 w-full">
+<div class="aspect-square rounded-sm bg-gray-200 dark:bg-white/5"></div>
+<div class="aspect-square rounded-sm bg-secondary/40"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary/60"></div>
+<div class="aspect-square rounded-sm bg-gray-200 dark:bg-white/5"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary/80"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary/20"></div>
+<div class="aspect-square rounded-sm bg-secondary/80"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary/40"></div>
+<div class="aspect-square rounded-sm bg-secondary/20"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary/60"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-gray-200 dark:bg-white/5"></div>
+<div class="aspect-square rounded-sm bg-secondary/40"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary/80"></div>
+<div class="aspect-square rounded-sm bg-secondary/20"></div>
+</div>
+<div class="flex justify-between mt-3 text-[10px] text-gray-400 uppercase tracking-wider">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 bg-card-light dark:bg-card-dark border border-stroke-light dark:border-stroke-dark rounded-3xl p-6">
+<h3 class="font-bold text-lg mb-6 dark:text-white">Active Habits</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="relative">
+<img alt="Mentor" class="w-12 h-12 rounded-full border-2 border-white dark:border-white/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADWchHqZ9w2l4mGlnP-CugXZcANzMgq8DFvqknnomQea5FkAGw_9FRE7Agu7Iu85kreP-TC_W0-nBuCXoSxcYlIJl3HdNXfrEbR2pB0vcrn-FES2kgw7bL1OgZYrPpjN1oIDnLinsSA_MKSRXjPIRsZAuBDZiwcYaMNtnW1YPd2iGZvdwoPcyum-hygVYyg6wjRxYDxHQhUDzRGRkJmNSJs8NUbqNUMA449nEkt5fmr0kzwOtBjzYff9OtmSAFsncUqF1-66_S32_U"/>
+<div class="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border-2 border-white dark:border-[#0f0f16]"></div>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-gray-900 dark:text-white text-sm">Morning Meditation</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-xs px-2 py-0.5 rounded-md bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">Mindset</span>
+<span class="text-xs text-gray-400">15 min</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-icons-round text-lg">check</span>
+</div>
+<div class="flex items-center text-[10px] text-orange-500 font-bold gap-0.5">
+<span class="material-icons-round text-[10px]">local_fire_department</span> 12
+                                </div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="relative">
+<img alt="Mentor" class="w-12 h-12 rounded-full border-2 border-white dark:border-white/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW-8rfuRF7SD0QhNqay8gJRr26OFT-rjOOQzsTvzCFUq19ypO-pwsCP41cFRItfJfRRiEUU_PLNDZaxn4VNVVeUa0bj73td3nakDRy6vTj7wKH2GsCw7Rq5cF-p29VWHylin4rAIjZrjaSJiAvBgGHNoFknbAV7rEDdLQwRR-QGwvplyMdR-XysIcrxGInnDmrlkFJVhYs9ZmfxOYdUwhof9szp7ebhdetMHRncslIoIBAlK-ksjv-s8MSGv9T0g8ktFDfr0OG1Mb4"/>
+<div class="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border-2 border-white dark:border-[#0f0f16]"></div>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-gray-900 dark:text-white text-sm">HIIT Workout</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-xs px-2 py-0.5 rounded-md bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-300">Health</span>
+<span class="text-xs text-gray-400">45 min</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-400 group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-icons-round text-lg">check</span>
+</div>
+<div class="flex items-center text-[10px] text-gray-400 font-bold gap-0.5">
+<span class="material-icons-round text-[10px]">local_fire_department</span> 0
+                                </div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group cursor-pointer">
+<div class="relative">
+<img alt="Mentor" class="w-12 h-12 rounded-full border-2 border-white dark:border-white/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGnflYCVk3u0gk2EvMK4xPMDO72rMOSyKiP49vUsdSNYxnop5ayd64rzKZAj7jF2BfHU2V4OcaYgskiBx6R2FJ4OkqSw88QcoWkWR5Tefsi3GcYfCEThuUK7YK6l7bdeloqDPVydf4VJbTI0wSiO-XhcfRRXL8hIVqhyo_ktm4SGgDd87XZ_m9jbEZjw454kFdU3Q9YDRIxZn63Toz4-fvu0-1CneQC-L1pZgfk1skBHfARsRUpRaj6KF6e9Sylz1F6XUHxiNJLIWn"/>
+<div class="absolute -bottom-1 -right-1 bg-gray-400 w-3 h-3 rounded-full border-2 border-white dark:border-[#0f0f16]"></div>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-gray-900 dark:text-white text-sm">Read 20 Pages</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-xs px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300">Study</span>
+<span class="text-xs text-gray-400">30 min</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-400 group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-icons-round text-lg">check</span>
+</div>
+<div class="flex items-center text-[10px] text-gray-400 font-bold gap-0.5">
+<span class="material-icons-round text-[10px]">local_fire_department</span> 0
+                                </div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 bg-card-light dark:bg-card-dark border border-stroke-light dark:border-stroke-dark rounded-3xl p-6 relative overflow-hidden">
+<h3 class="font-bold text-lg mb-4 dark:text-white">Completion Stats</h3>
+<div class="relative h-40 w-full mb-4">
+<div class="absolute inset-0 opacity-30 dark:opacity-20">
+<img alt="World Map Pattern" class="w-full h-full object-cover filter grayscale invert dark:invert-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWu4IXo46-gsVjWpQ5jggy2_oSpKLQ6UxPzZtN4lNZO2H65N50hjx2G54gxivY-8x1RuVPeHtxyK-D_KE9YugIdn4q3tO6ihJnHdxIAsSVWpd_SHLhEYNGHi5v-lIERiwT7toZFyhEZOkHymkSBX02-x86U_5jcXz9jTl7s8UerJg5EzZa9e606drTWDcWTXHItbhSwPxLKRUv3nxe-C0AikgIz1U7EKrMeL-ALBR7E-_S0AWhNOqR2wgDg-Jc8335C9awwk2lUGpZ"/>
+</div>
+<div class="absolute top-2 right-4 bg-white dark:bg-[#1a1a20] p-2 rounded-xl shadow-lg border border-gray-100 dark:border-white/10 flex items-center gap-2 animate-bounce" style="animation-duration: 3s;">
+<img alt="Japan" class="w-6 h-4 rounded-sm object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxriyNpFKjkgcLYBSAK2rNCRmjMCKcyU61C4iGEAl9R_W6ocCrgfnoe0DOhLcaJd7AIdaKdTk2OzmDuWWEqV9vA4VELSXmGDrlidZXCm1aLRQ344VNjvvl0OQjWbxGVOAsPqa5mvTJ1nPSsLVn54u3Rt--w-VbDD_G9477aQKZqugky_yaXMxIvvuFEpdSrOKaQRfbEAsyveZn-716qo2qO2fPYebjZNB5KAfaV6kqCNMKm3yc9J0lcVoetFGVOi79ZC2-L-ayDS7L"/>
+<div>
+<p class="text-[10px] text-gray-500">Mindset</p>
+<p class="text-xs font-bold dark:text-white">88% <span class="text-green-500">↑</span></p>
+</div>
+</div>
+<div class="absolute bottom-4 left-4 bg-white dark:bg-[#1a1a20] p-2 rounded-xl shadow-lg border border-gray-100 dark:border-white/10 flex items-center gap-2 animate-bounce" style="animation-duration: 4s;">
+<div class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+<span class="material-icons-round text-[14px]">water_drop</span>
+</div>
+<div>
+<p class="text-[10px] text-gray-500">Health</p>
+<p class="text-xs font-bold dark:text-white">95% <span class="text-green-500">↑</span></p>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto border-t border-stroke-light dark:border-white/5 pt-4">
+<div>
+<p class="text-xs text-gray-500">Total Active</p>
+<p class="text-xl font-bold dark:text-white">8 Habits</p>
+</div>
+<div class="w-12 h-12 relative">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-gray-200 dark:text-gray-700" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-dasharray="125" stroke-dashoffset="30" stroke-width="4"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-gray-600 dark:text-gray-300">75%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<button class="fixed bottom-6 right-6 w-12 h-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-50 border border-gray-200 dark:border-gray-700" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-round dark:hidden">dark_mode</span>
+<span class="material-icons-round hidden dark:block">light_mode</span>
+</button>
+
+</body></html>
